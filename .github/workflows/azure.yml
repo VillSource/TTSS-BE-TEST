@@ -26,4 +26,4 @@ jobs:
         with:
           inlineScript: |
             cd ./src/Anirut.Evacuation.Api
-            az acr build --registry $ACR_NAME --image ${{APP_NAME}}:${{ github.sha }} .
+            az acr build --registry $ACR_NAME --image ${{vars.APP_NAME}}:${{ github.sha }} .
