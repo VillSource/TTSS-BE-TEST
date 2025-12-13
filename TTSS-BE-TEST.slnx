@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Anirut.Evacuation.Api/Anirut.Evacuation.Api.csproj" />
+  </Folder>
+  <Project Path="TTSS-BE-TEST.AppHost/TTSS-BE-TEST.AppHost.csproj" Id="290fed08-dc20-41ae-a8f3-370acdccaf0e" />
+  <Project Path="TTSS-BE-TEST.ServiceDefaults/TTSS-BE-TEST.ServiceDefaults.csproj" />
+</Solution>
