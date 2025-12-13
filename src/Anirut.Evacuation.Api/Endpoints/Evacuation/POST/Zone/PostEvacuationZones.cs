@@ -3,7 +3,7 @@
 namespace Anirut.Evacuation.Api.Endpoints.Evacuation.POST.Zone;
 
 public class PostEvacuationZones : Ep
-    .Req<PostEvacuationZonesRequest>
+    .Req<List<PostEvacuationZonesRequest>>
     .Res<PostEvacuationZonesResponse>
 {
     public override void Configure()
@@ -20,8 +20,7 @@ public class PostEvacuationZones : Ep
         });
     }
 
-    public override async Task HandleAsync(PostEvacuationZonesRequest req, CancellationToken ct)
+    public override async Task HandleAsync(List<PostEvacuationZonesRequest> req, CancellationToken ct)
     {
-        Response.Msg = $"HELLO {req}";
     }
 }

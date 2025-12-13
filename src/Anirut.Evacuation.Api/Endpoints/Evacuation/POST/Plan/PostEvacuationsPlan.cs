@@ -3,7 +3,7 @@
 namespace Anirut.Evacuation.Api.Endpoints.Evacuation.POST.Plan;
 
 public class PostEvacuationsPlan : Ep
-    .NoReq.NoRes
+    .NoReq.Res<List<PostEvacuationsPlanResponse>>
 {
     public override void Configure()
     {
@@ -13,14 +13,28 @@ public class PostEvacuationsPlan : Ep
         Description(endpoint =>
         {
             endpoint.WithTags("Evacuation")
-                .WithSummary("Add Evacation plan")
+                .WithSummary("Generate Evacation plan")
                 .WithDescription("Generates a plan that assigns vehicles to evacuation zones, prioritizing areas based on urgency and vehicle capacity.") ;
         });
 
     }
 
-    public override Task HandleAsync(CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken ct)
     {
-        return base.HandleAsync(ct);
+        Response =
+        [
+            new() {
+                ZoneId = "zone-123",
+                VecicleId = "vehicle-456",
+                Eta = "15 minutes",
+                NumberOfPeople = 50
+            },
+            new() {
+                ZoneId = "zone-789",
+                VecicleId = "vehicle-012",
+                Eta = "30 minutes",
+                NumberOfPeople = 30
+            }
+        ];
     }
 }
