@@ -7,11 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FastEndpoints" Version="7.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.11.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\TTSS-BE-TEST.ServiceDefaults\TTSS-BE-TEST.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Endpoints\Evacuation\DELETE\Clear\" />
+    <Folder Include="Endpoints\Evacuation\GET\Status\" />
+    <Folder Include="Endpoints\Evacuation\PUT\Update\" />
   </ItemGroup>
 
 </Project>
