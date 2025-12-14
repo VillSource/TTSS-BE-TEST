@@ -1,14 +1,13 @@
 using Anirut.Evacuation.Api.Configurations;
 using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddConfigurations(builder.Configuration);
 
-
-builder.Services.AddOpenApi();
 builder.Services.AddFastEndpoints();
 
 var app = builder.Build();

@@ -9,7 +9,8 @@ public static class Extension
             .AddServices()
             .AddRedisConfig(config)
             .AddDbConfig(config)
-            .AddCorsConfig();
+            .AddCorsConfig()
+            .AddOpenApiConfig();
 
         return services;
     }
