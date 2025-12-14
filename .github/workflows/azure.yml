@@ -8,14 +8,12 @@ on:
 
 env:
   IMAGE_NAME: ${{ vars.APP_NAME }}
+  IMAGE_TAG: ${{ secrets.ACR_LOGIN_SERVER }}/${{ vars.APP_NAME }}:${{ github.sha }}
 
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    env:
-      IMAGE_TAG: ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-
 
     steps:
       - name: Checkout code
