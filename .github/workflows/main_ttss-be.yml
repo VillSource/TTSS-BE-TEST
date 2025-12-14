@@ -32,9 +32,9 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
+          file: ./src/Anirut.Evacuation.Api/Dockerfile
           push: true
           tags: ttsstest.azurecr.io/${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_BBA0E775CE954763BF5EC7F9F29BE25A }}/ttss-be-test:${{ github.sha }}
-          file: ./Dockerfile
 
   deploy:
     runs-on: ubuntu-latest
