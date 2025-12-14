@@ -39,6 +39,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddFastEndpoints();
 
 var app = builder.Build();
+app.UseHttpsRedirection();
 
 // --- Database connectivity check ---
 using (var scope = app.Services.CreateScope())
