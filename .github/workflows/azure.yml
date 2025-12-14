@@ -32,7 +32,7 @@ jobs:
           context: ./src/Anirut.Evacuation.Api
           file: ./Dockerfile
           push: true
-          tags: $IMAGE_TAG
+          tags: ${{ env.IMAGE_TAG }}
 
   # deploy:
   #   runs-on: ubuntu-latest
