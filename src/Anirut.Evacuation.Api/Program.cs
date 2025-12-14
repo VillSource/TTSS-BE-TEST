@@ -37,7 +37,7 @@ app.MapGet("/", () => Results.Redirect("scalar")).ExcludeFromDescription();
 
 app.UseHttpsRedirection();
 
-app.UseCors("corsPolicyName");
+app.UseCors("DefaultCorsPolicy");
 
 app.UseFastEndpoints(config =>
 {
