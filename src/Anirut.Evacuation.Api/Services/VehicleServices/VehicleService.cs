@@ -14,7 +14,13 @@ public class VehicleService : IVehicleService
 
     public Task AddRange(IEnumerable<VehicleEntity> data, CancellationToken ct = default)
     {
-        _data.AddRange(data);
-        return _data.AddRangeAsync(ct);
+        _data.AddRangeAsync(data, ct);
+        return _data.SaveChangesAsync(ct);
+    }
+
+    public Task<IEnumerable<VehicleEntity>> GetAll(CancellationToken ct = default)
+    {
+        var vehicles = _data.Vehicles.AsEnumerable();
+        return Task.FromResult(vehicles);
     }
 }

@@ -26,8 +26,9 @@ public class PostVehicles : Ep
                 .WithDescription("Adds information about available vehicles, such as capacity, type, and location.");
         });
     }
-    public override async Task HandleAsync(List<PostVehiclesRequest> req, CancellationToken ct)
+    public override async Task HandleAsync(List<PostVehiclesRequest> req, CancellationToken ct= default)
     {
         await _service.AddRange(req.Select(r => r.ToEntity()), ct);
+        var x = _service.GetAll(ct);
     }
 }

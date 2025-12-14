@@ -1,4 +1,5 @@
 using Anirut.Evacuation.Api.Data;
+using Anirut.Evacuation.Api.Services.VehicleServices;
 using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,9 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+
+builder.Services.AddScoped<IVehicleService, VehicleService>();
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("A")
@@ -46,6 +50,8 @@ using (var scope = app.Services.CreateScope())
             logger.LogCritical("Database is not connectable. Aborting startup.");
             throw new InvalidOperationException("Unable to connect to the database.");
         }
+
+        db.Database.EnsureCreated();
 
         logger.LogInformation("Database connection successful.");
     }

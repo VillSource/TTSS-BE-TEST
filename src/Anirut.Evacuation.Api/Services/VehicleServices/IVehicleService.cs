@@ -5,5 +5,6 @@ namespace Anirut.Evacuation.Api.Services.VehicleServices
     public interface IVehicleService
     {
         Task AddRange(IEnumerable<VehicleEntity> data, CancellationToken ct = default);
+        Task<IEnumerable<VehicleEntity>> GetAll(CancellationToken ct = default);
     }
 }

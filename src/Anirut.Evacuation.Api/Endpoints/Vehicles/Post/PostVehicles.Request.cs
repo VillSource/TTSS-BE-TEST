@@ -18,5 +18,5 @@ public class PostVehiclesRequest
         Type = Type,
         LocationCoordinates = LocationCoordinates,
         Speed = Speed
-    }
+    };
 }
