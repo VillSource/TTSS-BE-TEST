@@ -7,7 +7,12 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-builder.AddNpgsqlDbContext<DataContext>("exampleDB");
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("A")
+                           ?? throw new InvalidOperationException("Connection string 'EvacuationDatabase' not found.");
+    options.UseNpgsql(connectionString);
+});
 
 builder.Services.AddCors(options =>
 {
@@ -24,6 +29,33 @@ builder.Services.AddOpenApi();
 builder.Services.AddFastEndpoints();
 
 var app = builder.Build();
+
+// --- Database connectivity check ---
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+    var logger = loggerFactory.CreateLogger("Startup.DatabaseCheck");
+
+    try
+    {
+        var db = services.GetRequiredService<DataContext>();
+        var canConnect = await db.Database.CanConnectAsync();
+        if (!canConnect)
+        {
+            logger.LogCritical("Database is not connectable. Aborting startup.");
+            throw new InvalidOperationException("Unable to connect to the database.");
+        }
+
+        logger.LogInformation("Database connection successful.");
+    }
+    catch (Exception ex)
+    {
+        loggerFactory.CreateLogger("Startup.DatabaseCheck").LogCritical(ex, "Database connectivity check failed.");
+        throw;
+    }
+}
+// --- End database check ---
 
 app.MapDefaultEndpoints();
 
