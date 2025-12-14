@@ -1,9 +1,14 @@
+using Anirut.Evacuation.Api.Data;
 using FastEndpoints;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+builder.AddNpgsqlDbContext<DataContext>("exampleDB");
+
 
 builder.Services.AddOpenApi();
 builder.Services.AddFastEndpoints();
@@ -15,9 +20,10 @@ app.MapDefaultEndpoints();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference();
-    app.MapGet("/", () => Results.Redirect("scalar")).ExcludeFromDescription();
 }
+
+app.MapScalarApiReference();
+app.MapGet("/", () => Results.Redirect("scalar")).ExcludeFromDescription();
 
 app.UseHttpsRedirection();
 app.UseFastEndpoints(config =>
