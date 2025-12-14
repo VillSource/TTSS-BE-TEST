@@ -1,9 +1,17 @@
-﻿using FastEndpoints;
+﻿using Anirut.Evacuation.Api.Services.Database;
+using FastEndpoints;
 
 namespace Anirut.Evacuation.Api.Endpoints.Evacuation.Delete.Clear;
 
 public class DeleteEvacuationsClear : Ep.NoReq.NoRes
 {
+    private readonly IDatabaseService _databaseService;
+
+    public DeleteEvacuationsClear(IDatabaseService databaseService)
+    {
+        _databaseService = databaseService;
+    }
+
     public override void Configure()
     {
         AllowAnonymous();
@@ -17,8 +25,9 @@ public class DeleteEvacuationsClear : Ep.NoReq.NoRes
         });
     }
 
-    public override Task HandleAsync(CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken ct)
     {
-        return base.HandleAsync(ct);
+        await _databaseService.ClearAllData(ct);
+        await Send.NoContentAsync(ct);
     }
 }

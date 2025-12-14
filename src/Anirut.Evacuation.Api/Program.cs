@@ -1,21 +1,28 @@
 using Anirut.Evacuation.Api.Data;
+using Anirut.Evacuation.Api.Services.Database;
 using Anirut.Evacuation.Api.Services.VehicleServices;
 using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
 builder.Services.AddScoped<IVehicleService, VehicleService>();
+builder.Services.AddScoped<IDatabaseService, DatabaseService>();
 
+string redisConnStr = builder.Configuration.GetConnectionString("Redis")
+    ?? throw new InvalidOperationException("Connection string 'Redis' not found.");
+var redis = ConnectionMultiplexer.Connect(redisConnStr + ",allowAdmin=true");
+builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = builder.Configuration.GetConnectionString("Redis")
-                           ?? throw new InvalidOperationException("Connection string 'Redis' not found.");
-    options.InstanceName = "TTSS_";
+    options.ConnectionMultiplexerFactory = async () => redis;
+    options.InstanceName = "TTSS_"; 
 });
+
 
 builder.Services.AddDbContext<DataContext>(options =>
 {

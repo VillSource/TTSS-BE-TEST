@@ -19,8 +19,4 @@
     <PackageReference Include="Scalar.AspNetCore" Version="2.11.6" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\TTSS-BE-TEST.ServiceDefaults\TTSS-BE-TEST.ServiceDefaults.csproj" />
-  </ItemGroup>
-
 </Project>
