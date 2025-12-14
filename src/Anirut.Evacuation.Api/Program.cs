@@ -2,7 +2,6 @@ using Anirut.Evacuation.Api.Data;
 using Anirut.Evacuation.Api.Services.VehicleServices;
 using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,10 +10,17 @@ builder.AddServiceDefaults();
 
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis")
+                           ?? throw new InvalidOperationException("Connection string 'Redis' not found.");
+    options.InstanceName = "TTSS_";
+});
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("A")
-                           ?? throw new InvalidOperationException("Connection string 'EvacuationDatabase' not found.");
+    var connectionString = builder.Configuration.GetConnectionString("Npgsql")
+                           ?? throw new InvalidOperationException("Connection string 'Npgsql' not found.");
     options.UseNpgsql(connectionString);
 });
 
