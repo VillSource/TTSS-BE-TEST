@@ -1,4 +1,5 @@
 ﻿using Anirut.Evacuation.Api.Common.ObjectValues;
+using Anirut.Evacuation.Api.Data.Entities;
 
 namespace Anirut.Evacuation.Api.Endpoints.Vehicles.Post;
 
@@ -10,4 +11,12 @@ public class PostVehiclesRequest
     public GeoCoordinate LocationCoordinates { get; set; }
     public double Speed { get; set; }
 
+    internal VehicleEntity ToEntity() => new()
+    {
+        VehicleId = VehicleId,
+        Capacity = Capacity,
+        Type = Type,
+        LocationCoordinates = LocationCoordinates,
+        Speed = Speed
+    }
 }

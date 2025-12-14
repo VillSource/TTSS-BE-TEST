@@ -2,7 +2,7 @@
 
 namespace Anirut.Evacuation.Api.Data.Entities;
 
-public class Vehicle
+public class VehicleEntity
 {
     public string VehicleId { get; set; } = string.Empty;
     public int Capacity { get; set; }

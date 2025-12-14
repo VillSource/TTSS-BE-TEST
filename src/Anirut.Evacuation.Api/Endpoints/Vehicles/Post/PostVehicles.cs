@@ -1,4 +1,5 @@
-﻿using FastEndpoints;
+﻿using Anirut.Evacuation.Api.Services.VehicleServices;
+using FastEndpoints;
 
 namespace Anirut.Evacuation.Api.Endpoints.Vehicles.Post;
 
@@ -6,6 +7,13 @@ public class PostVehicles : Ep
     .Req<List<PostVehiclesRequest>>
     .NoRes
 {
+    private readonly IVehicleService _service;
+
+    public PostVehicles(IVehicleService service)
+    {
+        _service = service;
+    }
+
     public override void Configure()
     {
         AllowAnonymous();
@@ -20,5 +28,6 @@ public class PostVehicles : Ep
     }
     public override async Task HandleAsync(List<PostVehiclesRequest> req, CancellationToken ct)
     {
+        await _service.AddRange(req.Select(r => r.ToEntity()), ct);
     }
 }

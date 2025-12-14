@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Anirut.Evacuation.Api.Data.Configurations;
 
-public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
+public class VehicleConfiguration : IEntityTypeConfiguration<VehicleEntity>
 {
-    public void Configure(EntityTypeBuilder<Vehicle> builder)
+    public void Configure(EntityTypeBuilder<VehicleEntity> builder)
     {
         builder.HasKey(v => v.VehicleId);
         builder.OwnsOne(v => v.LocationCoordinates);
