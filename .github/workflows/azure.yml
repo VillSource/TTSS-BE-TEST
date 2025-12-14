@@ -34,17 +34,17 @@ jobs:
           push: true
           tags: ${{ env.IMAGE_TAG }}
 
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   needs: build-and-push
-  #   steps:
-  #     - name: Login to Azure
-  #       uses: azure/login@v1
-  #       with:
-  #         creds: ${{ secrets.AZURE_CREDENTIALS }}
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-  #     - name: Deploy to Azure Web App
-  #       uses: azure/webapps-deploy@v3
-  #       with:
-  #         app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-  #         images: '${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}'
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ttss-test
+          images: ${{ env.IMAGE_TAG }}
