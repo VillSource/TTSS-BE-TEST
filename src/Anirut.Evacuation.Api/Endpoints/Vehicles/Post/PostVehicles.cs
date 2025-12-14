@@ -30,5 +30,6 @@ public class PostVehicles : Ep
     {
         await _service.AddRange(req.Select(r => r.ToEntity()), ct);
         var x = _service.GetAll(ct);
+        await Send.NoContentAsync(ct);
     }
 }

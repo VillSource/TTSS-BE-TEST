@@ -23,6 +23,7 @@ public class DatabaseService : IDatabaseService
             await server.FlushDatabaseAsync();
         }
         await _data.Vehicles.ExecuteDeleteAsync(ct);
+        await _data.Zones.ExecuteDeleteAsync(ct);
         await _data.SaveChangesAsync(ct);
     }
 }

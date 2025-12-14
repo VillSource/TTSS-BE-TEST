@@ -7,7 +7,7 @@ public class VehicleEntity
     public string VehicleId { get; set; } = string.Empty;
     public int Capacity { get; set; }
     public string Type { get; set; } = string.Empty;
-    public GeoCoordinate LocationCoordinates { get; set; }
+    public GeoCoordinate LocationCoordinates { get; set; } = GeoCoordinate.Default;
     public double Speed { get; set; }
 
 }

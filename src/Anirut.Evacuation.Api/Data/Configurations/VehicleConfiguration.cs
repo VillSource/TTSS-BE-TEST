@@ -8,6 +8,7 @@ public class VehicleConfiguration : IEntityTypeConfiguration<VehicleEntity>
 {
     public void Configure(EntityTypeBuilder<VehicleEntity> builder)
     {
+        builder.ToTable("Vehicle");
         builder.HasKey(v => v.VehicleId);
         builder.OwnsOne(v => v.LocationCoordinates);
     }

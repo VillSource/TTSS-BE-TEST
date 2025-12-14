@@ -1,4 +1,5 @@
-﻿using FastEndpoints;
+﻿using Anirut.Evacuation.Api.Services.ZoneServices;
+using FastEndpoints;
 
 namespace Anirut.Evacuation.Api.Endpoints.Evacuation.POST.Zone;
 
@@ -6,6 +7,13 @@ public class PostEvacuationZones : Ep
     .Req<List<PostEvacuationZonesRequest>>
     .Res<PostEvacuationZonesResponse>
 {
+    private readonly IZoneService _service;
+
+    public PostEvacuationZones(IZoneService service)
+    {
+        _service = service;
+    }
+
     public override void Configure()
     {
         AllowAnonymous();
@@ -14,7 +22,7 @@ public class PostEvacuationZones : Ep
         Description(endpoint =>
         {
             endpoint.WithTags("Evacuation")
-                .WithSummary("Add Evacation zones")
+                .WithSummary("Add Evocation zones")
                 .WithDescription("Adds information about evacuation zones, including location, number of people needing evacuation, and urgency level.")
                 ;
         });
@@ -22,5 +30,7 @@ public class PostEvacuationZones : Ep
 
     public override async Task HandleAsync(List<PostEvacuationZonesRequest> req, CancellationToken ct)
     {
+        await _service.AddRange(req.Select(r => r.ToEntity()), ct);
+        await Send.NoContentAsync(ct);
     }
 }

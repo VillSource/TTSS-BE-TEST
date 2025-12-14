@@ -1,6 +1,7 @@
 using Anirut.Evacuation.Api.Data;
 using Anirut.Evacuation.Api.Services.Database;
 using Anirut.Evacuation.Api.Services.VehicleServices;
+using Anirut.Evacuation.Api.Services.ZoneServices;
 using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -8,10 +9,9 @@ using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
-
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<IDatabaseService, DatabaseService>();
+builder.Services.AddScoped<IZoneService, ZoneService>();
 
 string redisConnStr = builder.Configuration.GetConnectionString("Redis")
     ?? throw new InvalidOperationException("Connection string 'Redis' not found.");
@@ -77,7 +77,6 @@ using (var scope = app.Services.CreateScope())
 }
 // --- End database check ---
 
-app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
 {

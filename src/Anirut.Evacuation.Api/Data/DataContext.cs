@@ -6,6 +6,7 @@ namespace Anirut.Evacuation.Api.Data;
 public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
 {
     public virtual DbSet<VehicleEntity> Vehicles { get; set; }
+    public virtual DbSet<ZoneEntity> Zones { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
