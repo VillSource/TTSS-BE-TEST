@@ -18,8 +18,6 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
-
-    builder.Properties["DefaultCorsPolicyName"] = DefaultCorsPolicy;
 });
 
 builder.Services.AddOpenApi();
@@ -39,11 +37,7 @@ app.MapGet("/", () => Results.Redirect("scalar")).ExcludeFromDescription();
 
 app.UseHttpsRedirection();
 
-var corsPolicyName = builder.Properties.TryGetValue("DefaultCorsPolicyName", out var nameObj) && nameObj is string s
-    ? s
-    : "DefaultCorsPolicy";
-
-app.UseCors(corsPolicyName);
+app.UseCors("corsPolicyName");
 
 app.UseFastEndpoints(config =>
 {
