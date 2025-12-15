@@ -7,9 +7,9 @@ public class GetEvacuationsStatus : Ep
     .NoReq
     .Res<List<GetEvacuationsStatusResponse>>
 {
-    private readonly EvacuationStatusServices _evacuationStatusServices;
+    private readonly IEvacuationStatusService _evacuationStatusServices;
 
-    public GetEvacuationsStatus(EvacuationStatusServices evacuationStatusServices)
+    public GetEvacuationsStatus(IEvacuationStatusService evacuationStatusServices)
     {
         _evacuationStatusServices = evacuationStatusServices;
     }

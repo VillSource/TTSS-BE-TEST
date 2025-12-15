@@ -1,19 +1,11 @@
 ﻿using Anirut.Evacuation.Api.Data;
 using Anirut.Evacuation.Api.Data.Entities;
+using Anirut.Evacuation.Api.Services.PlanServices.Models;
 using Google.OrTools.ConstraintSolver;
 
 namespace Anirut.Evacuation.Api.Services.PlanServices;
 
-public class A
-{
-    public string ZoneId { get; set; } = string.Empty;
-    public string VecicleId { get; set; } = string.Empty;
-    public string Eta { get; set; } = string.Empty;
-    public int NumberOfPeople { get; set; }
-
-}
-
-public class PlanService
+public partial class PlanService : IPlanService
 {
     private readonly DataContext _context;
 
@@ -22,7 +14,7 @@ public class PlanService
         _context = context;
     }
 
-    public List<A> CalculatePlan()
+    public List<PlanResult> CalculatePlan()
     {
         var vehicles = _context.Vehicles.ToList();
         var zones = _context.Zones.ToList();
@@ -34,31 +26,31 @@ public class PlanService
 
         var result = Solve(zones, vehicles);
 
-        var planResults = new List<A>();
+        var planResults = new List<PlanResult>();
 
-        planResults = result.SelectMany(r => 
-            r.ZoneIdsVisited.Select(zid => new A 
-            { 
-                ZoneId = zid, 
-                VecicleId = r.VehicleId, 
-                Eta = "", 
-                NumberOfPeople = zones.First(z => z.ZoneId == zid).NumberOfPeople 
-            })
-        ).ToList();
+        planResults = result.SelectMany(r =>
+            r.ZoneIdsVisited.Select(zid =>
+            {
+                var zone = zones.First(z => z.ZoneId == zid);
+                var vehicle = vehicles.First(v => v.VehicleId == r.VehicleId);
+                var distanceKm = vehicle.Location.HaversineDistanceTo(zone.Location);
+                var etaHours = distanceKm / vehicle.Speed;
+                var etaMinutes = (int)(etaHours * 60);
+                return new PlanResult
+                {
+                    ZoneId = zid,
+                    VecicleId = r.VehicleId,
+                    Eta = $"{etaMinutes} minutes",
+                    NumberOfPeople = zone.NumberOfPeople
+                };
+            })).ToList();
 
         return planResults;
     }
-
-    public class RoutingSolution
-    {
-        public string VehicleId { get; set; } = string.Empty;
-        public List<string> ZoneIdsVisited { get; set; } = [];
-        public double TotalTimeSeconds { get; set; }
-    }
-    public List<RoutingSolution> Solve(List<ZoneEntity> rawZones, List<VehicleEntity> vehicles)
+    private List<RoutingSolution> Solve(List<ZoneEntity> rawZones, List<VehicleEntity> vehicles)
     {
         int splitSize = vehicles.Max(v => v.Capacity);
-        var virtualZones = SplitZones(rawZones, splitSize);
+        var virtualZones = SplitBigZones(rawZones, splitSize);
 
         var allLocations = new List<ZoneEntity>();
         allLocations.AddRange(virtualZones);
@@ -99,23 +91,15 @@ public class PlanService
                 var fromNode = allLocations[manager.IndexToNode(fromIndex)];
                 var toNode = allLocations[manager.IndexToNode(toIndex)];
 
-                bool isFromDepot = fromIndex >= virtualZones.Count;
-                bool isToDepot = toIndex >= virtualZones.Count;
-                if (!isFromDepot && !isToDepot && (fromIndex != toIndex))
-                {
-                    return long.MaxValue;
-                }
-
-
                 double distanceKm = fromNode.Location.HaversineDistanceTo(toNode.Location);
 
-                double priorityFactor = 6 - (int)toNode.UrgencyLevel;
+                double priorityFactor = 1;
 
                 int toNodeIndex = manager.IndexToNode(toIndex);
                 if (toNodeIndex < virtualZones.Count)
                 {
-                    int p = 6 - (int)virtualZones[toNodeIndex].UrgencyLevel;
-                    priorityFactor = 0.5 + (p / 5);
+                    int p = 5 - (int)virtualZones[toNodeIndex].UrgencyLevel;
+                    priorityFactor = 0.5 + (p / 10);
                 }
 
                 double timeHours = distanceKm / velocity;
@@ -150,7 +134,7 @@ public class PlanService
         return ExtractSolution(manager, routing, solution, vehicles, virtualZones);
     }
 
-    private List<ZoneEntity> SplitZones(List<ZoneEntity> zones, int maxSplitSize)
+    private List<ZoneEntity> SplitBigZones(List<ZoneEntity> zones, int maxSplitSize)
     {
         var result = new List<ZoneEntity>();
         foreach (var zone in zones)

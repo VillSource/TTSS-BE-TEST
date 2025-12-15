@@ -1,4 +1,5 @@
 ﻿using Anirut.Evacuation.Api.Services.EvacuationStatusServices;
+using Anirut.Evacuation.Api.Services.EvacuationStatusServices.Models;
 using FastEndpoints;
 
 namespace Anirut.Evacuation.Api.Endpoints.Evacuation.Put.Status;
@@ -29,7 +30,7 @@ public class PutEvacuationsStatus : Ep
 
     public override async Task HandleAsync(List<PutEvacuationsStatusRequest> req, CancellationToken ct)
     {
-        var x = req.Select(r => new B
+        var x = req.Select(r => new EvacuationStatusUpdate
         {
             ZoneId = r.ZoneId,
             TotalMove = r.TotalMove,

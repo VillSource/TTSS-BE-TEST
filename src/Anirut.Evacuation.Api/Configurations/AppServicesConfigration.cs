@@ -13,8 +13,8 @@ public static class AppServicesConfigration
         services.AddScoped<IVehicleService, VehicleService>();
         services.AddScoped<IDatabaseService, DatabaseService>();
         services.AddScoped<IZoneService, ZoneService>();
-        services.AddScoped<PlanService, PlanService>();
-        services.AddScoped<EvacuationStatusServices, EvacuationStatusServices>();
+        services.AddScoped<IPlanService, PlanService>();
+        services.AddScoped<IEvacuationStatusService, EvacuationStatusServices>();
 
         return services;
     }

@@ -6,9 +6,9 @@ namespace Anirut.Evacuation.Api.Endpoints.Evacuation.POST.Plan;
 public class PostEvacuationsPlan : Ep
     .NoReq.Res<List<PostEvacuationsPlanResponse>>
 {
-    private readonly PlanService _planService;
+    private readonly IPlanService _planService;
 
-    public PostEvacuationsPlan(PlanService planService)
+    public PostEvacuationsPlan(IPlanService planService)
     {
         _planService = planService;
     }
@@ -21,7 +21,7 @@ public class PostEvacuationsPlan : Ep
         Description(endpoint =>
         {
             endpoint.WithTags("Evacuation")
-                .WithSummary("Generate Evacation plan")
+                .WithSummary("Generate Evocation plan")
                 .WithDescription("Generates a plan that assigns vehicles to evacuation zones, prioritizing areas based on urgency and vehicle capacity.") ;
         });
 
@@ -36,7 +36,7 @@ public class PostEvacuationsPlan : Ep
             NumberOfPeople = r.NumberOfPeople,
             VecicleId = r.VecicleId,
             ZoneId = r.ZoneId,
-            Eta = ""
+            Eta = r.Eta
         })];
     }
 }

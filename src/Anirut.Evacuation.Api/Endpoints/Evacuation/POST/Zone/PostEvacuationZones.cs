@@ -5,7 +5,7 @@ namespace Anirut.Evacuation.Api.Endpoints.Evacuation.POST.Zone;
 
 public class PostEvacuationZones : Ep
     .Req<List<PostEvacuationZonesRequest>>
-    .Res<PostEvacuationZonesResponse>
+    .NoRes
 {
     private readonly IZoneService _service;
 

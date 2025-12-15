@@ -1,44 +1,49 @@
 ﻿using Anirut.Evacuation.Api.Data;
+using Anirut.Evacuation.Api.Services.EvacuationStatusServices.Models;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 
 namespace Anirut.Evacuation.Api.Services.EvacuationStatusServices;
 
-public class A
-{
-    public string ZoneId { get; set; } = string.Empty;
-    public int TotalEvacuated { get; set; }
-    public int RemainingPeople { get; set; }
-    public string LastVehiclesUse { get; set; } = string.Empty;
-
-}
-
-public class B
-{
-    public string VehicleId { get; set; } = string.Empty;
-    public string ZoneId { get; set; } = string.Empty;
-    public int TotalMove { get; set; }
-}
-
-public class EvacuationStatusServices
+public class EvacuationStatusServices : IEvacuationStatusService
 {
     private readonly DataContext _data;
+    private readonly IDistributedCache _cache;
+    private readonly string _cacheKey = nameof(EvacuationStatusServices);
 
-    public EvacuationStatusServices(DataContext data)
+    public EvacuationStatusServices(DataContext data, IDistributedCache cache)
     {
         _data = data;
+        _cache = cache;
     }
 
-    public async Task<List<A>> GetStatus()
+    public async Task<List<EvacuationStatusResult>> GetStatus()
     {
-        return _data.Zones.Select(z => new A
+        var cachedData = await _cache.GetStringAsync(_cacheKey);
+
+        if (cachedData != null)
+        {
+            return JsonSerializer.Deserialize<List<EvacuationStatusResult>>(cachedData)
+                ?? [];
+        }
+
+        var result = _data.Zones.Select(z => new EvacuationStatusResult
         {
             RemainingPeople = z.NumberOfPeople,
             LastVehiclesUse = z.LastVehicleId ?? string.Empty,
             TotalEvacuated = z.TotalPeople,
             ZoneId = z.ZoneId
         }).ToList();
+
+        await _cache.SetStringAsync(_cacheKey, JsonSerializer.Serialize(result), new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+        });
+
+        return result;
     }
 
-    public async Task UpdateStatus(List<B> data)
+    public async Task UpdateStatus(List<EvacuationStatusUpdate> data)
     {
         var zoneIds = data.Select(d => d.ZoneId).Distinct().ToList();
         var zone = _data.Zones.Where(z => zoneIds.Contains(z.ZoneId));
@@ -50,9 +55,14 @@ public class EvacuationStatusServices
             var lastVehicle = dataUpdateForZone.LastOrDefault()?.VehicleId ?? string.Empty;
             z.NumberOfPeople -= totalMove;
             z.LastVehicleId = lastVehicle;
+            if (z.NumberOfPeople < 0)
+            {
+                z.NumberOfPeople = 0;
+            }
         }
 
         _data.Zones.UpdateRange(zone);
         await _data.SaveChangesAsync();
+        await _cache.RemoveAsync(_cacheKey);
     }
 }
