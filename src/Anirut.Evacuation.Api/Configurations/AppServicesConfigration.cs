@@ -1,4 +1,5 @@
 ﻿using Anirut.Evacuation.Api.Services.Database;
+using Anirut.Evacuation.Api.Services.EvacuationStatusServices;
 using Anirut.Evacuation.Api.Services.PlanServices;
 using Anirut.Evacuation.Api.Services.VehicleServices;
 using Anirut.Evacuation.Api.Services.ZoneServices;
@@ -13,6 +14,7 @@ public static class AppServicesConfigration
         services.AddScoped<IDatabaseService, DatabaseService>();
         services.AddScoped<IZoneService, ZoneService>();
         services.AddScoped<PlanService, PlanService>();
+        services.AddScoped<EvacuationStatusServices, EvacuationStatusServices>();
 
         return services;
     }

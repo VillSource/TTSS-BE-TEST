@@ -16,6 +16,7 @@ public class PostEvacuationZonesRequest
         ZoneId = ZoneId,
         Location = LocationCoordinates,
         NumberOfPeople = NumberOfPeople,
+        TotalPeople = NumberOfPeople,
         UrgencyLevel = UrgencyLevel
     };
 }

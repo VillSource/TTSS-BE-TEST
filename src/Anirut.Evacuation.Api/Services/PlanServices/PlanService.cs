@@ -26,6 +26,12 @@ public class PlanService
     {
         var vehicles = _context.Vehicles.ToList();
         var zones = _context.Zones.ToList();
+
+        if (vehicles.Count == 0 || zones.Count == 0)
+        {
+            return [];
+        }
+
         var result = Solve(zones, vehicles);
 
         var planResults = new List<A>();

@@ -1,5 +1,4 @@
 ﻿using Anirut.Evacuation.Api.Common.Enumns;
-using Anirut.Evacuation.Api.Data;
 using Anirut.Evacuation.Api.Data.Entities;
 using Anirut.Evacuation.Api.Services.PlanServices;
 

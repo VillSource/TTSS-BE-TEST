@@ -1,11 +1,19 @@
-﻿using FastEndpoints;
+﻿using Anirut.Evacuation.Api.Services.EvacuationStatusServices;
+using FastEndpoints;
 
 namespace Anirut.Evacuation.Api.Endpoints.Evacuation.Put.Status;
 
 public class GetEvacuationsStatus : Ep
-    .Req<GetEvacuationsStatusRequest>
-    .NoRes
+    .NoReq
+    .Res<List<GetEvacuationsStatusResponse>>
 {
+    private readonly EvacuationStatusServices _evacuationStatusServices;
+
+    public GetEvacuationsStatus(EvacuationStatusServices evacuationStatusServices)
+    {
+        _evacuationStatusServices = evacuationStatusServices;
+    }
+
     public override void Configure()
     {
         AllowAnonymous();
@@ -19,7 +27,15 @@ public class GetEvacuationsStatus : Ep
         });
     }
 
-    public override async Task HandleAsync(GetEvacuationsStatusRequest req, CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken ct)
     {
+        var status = await _evacuationStatusServices.GetStatus();
+        Response = status.Select(s => new GetEvacuationsStatusResponse
+        {
+            LastVehiclesUse = s.LastVehiclesUse,
+            RemainingPeople = s.RemainingPeople,
+            TotalEvacuated = s.TotalEvacuated,
+            ZoneId = s.ZoneId
+        }).ToList();
     }
 }
