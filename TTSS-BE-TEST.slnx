@@ -2,4 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/Anirut.Evacuation.Api/Anirut.Evacuation.Api.csproj" />
   </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Anirut.Evacuation.Api.Test/Anirut.Evacuation.Api.Test.csproj" Id="925c75a6-577e-4a1b-8e16-0272af7b5bf1" />
+  </Folder>
 </Solution>

@@ -10,6 +10,6 @@ public class VehicleConfiguration : IEntityTypeConfiguration<VehicleEntity>
     {
         builder.ToTable("Vehicle");
         builder.HasKey(v => v.VehicleId);
-        builder.OwnsOne(v => v.LocationCoordinates);
+        builder.OwnsOne(v => v.Location);
     }
 }

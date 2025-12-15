@@ -16,7 +16,7 @@ public class PostVehiclesRequest
         VehicleId = VehicleId,
         Capacity = Capacity,
         Type = Type,
-        LocationCoordinates = LocationCoordinates,
+        Location = LocationCoordinates,
         Speed = Speed
     };
 }

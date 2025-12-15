@@ -10,6 +10,6 @@ public class ZoneConfiguration : IEntityTypeConfiguration<ZoneEntity>
     {
         builder.ToTable("Zone");
         builder.HasKey(z => z.ZoneId);
-        builder.OwnsOne(z => z.LocationCoordinates);
+        builder.OwnsOne(z => z.Location);
     }
 }

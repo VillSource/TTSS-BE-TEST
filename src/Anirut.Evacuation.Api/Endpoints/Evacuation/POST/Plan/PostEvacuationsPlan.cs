@@ -1,10 +1,18 @@
-﻿using FastEndpoints;
+﻿using Anirut.Evacuation.Api.Services.PlanServices;
+using FastEndpoints;
 
 namespace Anirut.Evacuation.Api.Endpoints.Evacuation.POST.Plan;
 
 public class PostEvacuationsPlan : Ep
     .NoReq.Res<List<PostEvacuationsPlanResponse>>
 {
+    private readonly PlanService _planService;
+
+    public PostEvacuationsPlan(PlanService planService)
+    {
+        _planService = planService;
+    }
+
     public override void Configure()
     {
         AllowAnonymous();
@@ -21,20 +29,14 @@ public class PostEvacuationsPlan : Ep
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        Response =
-        [
-            new() {
-                ZoneId = "zone-123",
-                VecicleId = "vehicle-456",
-                Eta = "15 minutes",
-                NumberOfPeople = 50
-            },
-            new() {
-                ZoneId = "zone-789",
-                VecicleId = "vehicle-012",
-                Eta = "30 minutes",
-                NumberOfPeople = 30
-            }
-        ];
+        var res = _planService.CalculatePlan();
+
+        Response = [.. res.Select( r => new PostEvacuationsPlanResponse
+        {
+            NumberOfPeople = r.NumberOfPeople,
+            VecicleId = r.VecicleId,
+            ZoneId = r.ZoneId,
+            Eta = ""
+        })];
     }
 }

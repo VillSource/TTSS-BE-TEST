@@ -14,7 +14,7 @@ public class PostEvacuationZonesRequest
     internal ZoneEntity ToEntity() => new()
     {
         ZoneId = ZoneId,
-        LocationCoordinates = LocationCoordinates,
+        Location = LocationCoordinates,
         NumberOfPeople = NumberOfPeople,
         UrgencyLevel = UrgencyLevel
     };
