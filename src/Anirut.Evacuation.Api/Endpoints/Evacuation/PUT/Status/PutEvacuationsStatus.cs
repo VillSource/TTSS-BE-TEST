@@ -8,9 +8,9 @@ public class PutEvacuationsStatus : Ep
     .Req<List<PutEvacuationsStatusRequest>>
     .NoRes
 {
-    private readonly EvacuationStatusServices _service;
+    private readonly IEvacuationStatusService _service;
 
-    public PutEvacuationsStatus(EvacuationStatusServices service)
+    public PutEvacuationsStatus(IEvacuationStatusService service)
     {
         _service = service;
     }
